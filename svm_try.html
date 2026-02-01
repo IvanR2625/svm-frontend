@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Try the SVM MDD prediction model. Input bacterial abundance data and genus counts to get predictions."
+    />
+    <meta name="author" content="Ivan Raizada, Matthew Sun" />
+    <title>Try the Model - SVM Gut Bacteria</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="images/website_icon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="content-language" content="en" />
+    <style>
+      button.submit-button,
+      button.reset-button {
+        border-radius: 24px !important;
+        overflow: visible;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a id="top-left-decorative-bar" href="index.html">
+        <img
+          src="images/website_icon_nobg.png"
+          alt="Website Icon"
+          id="website-icon"
+          width="100"
+          height="100"
+          class="header-icon"
+        />
+      </a>
+      <h1 id="project-name" class="project-title">
+        <span style="color: #6c728a">SVM</span> for
+        <span style="color: #1e90ff">MDD</span> and
+        <span style="color: #ff4c4c">Gut</span>
+      </h1>
+
+      <nav id="top-nav-bar">
+        <div class="bubble_bg">
+          <a href="index.html" class="nav-link">Home</a
+          ><a href="svm_try.html" class="nav-link">Try it Now</a>
+        </div>
+        <div class="bubble_ry">
+          <a href="svm_methods.html" class="nav-link">Methodology</a>
+          <a href="svm_results.html" class="nav-link">Results</a>
+          <a href="svm_limits.html" class="nav-link">Limitations</a>
+        </div>
+      </nav>
+    </header>
+
+    <br /><br /><br /><br /><br /><br />
+
+    <main>
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <h2 class="hero-title">Test the Model</h2>
+        <p class="hero-paragraph">
+          <span style="font-weight: 700">Interactive Prediction Tool.</span>
+          Input your microbiome data to test our SVM classifier. Select
+          bacterial genera and enter sequencing read counts to receive a
+          prediction based on our trained model.
+        </p>
+      </div>
+
+      <br /><br /><br />
+
+      <!-- Information Cards -->
+      <div class="try-info-grid">
+        <div class="info-card">
+          <div class="info-icon">📝</div>
+          <h3>How to Use</h3>
+          <p>
+            Enter read counts (separated by semicolons) on the left, then select
+            matching bacterial genera on the right.
+          </p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🔍</div>
+          <h3>Search Function</h3>
+          <p>
+            Use the search box to quickly find specific bacteria from our 341
+            detected genera.
+          </p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">⚡</div>
+          <h3>Real-Time Results</h3>
+          <p>
+            Submit your data to receive instant predictions based on our machine
+            learning model.
+          </p>
+        </div>
+      </div>
+
+      <br /><br /><br />
+
+      <!-- Main Form Section -->
+      <div class="form-container">
+        <div class="form-wrapper">
+          <!-- Left Section: Read Input -->
+          <div class="form-left">
+            <div class="form-section-header">
+              <h3>Bacterial Read Counts</h3>
+              <p class="form-hint">
+                Enter relative abundance values separated by semicolons, note
+                that the more values and genera you select, the better the
+                prediction accuracy.
+              </p>
+            </div>
+            <div class="input-group">
+              <label for="reads-input">Read Counts:</label>
+              <textarea
+                id="reads-input"
+                class="reads-textarea"
+                placeholder="Example: 4000; 320; 400; 150; 890; ..."
+                rows="10"
+              ></textarea>
+              <div class="input-helper">
+                <span id="read-count">0 values entered</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Section: Bacteria Selection -->
+          <div class="form-right">
+            <div class="form-section-header">
+              <h3>Select Genera (341 total)</h3>
+              <p class="form-hint">
+                Choose matching bacteria for each read count
+              </p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+              <input
+                type="text"
+                id="bacteria-search"
+                class="bacteria-search"
+                placeholder="🔍 Search bacteria..."
+              />
+            </div>
+
+            <!-- Scrollable Bacteria List -->
+            <div class="bacteria-list-container">
+              <div class="bacteria-list" id="bacteria-list">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+
+            <div class="selection-helper">
+              <span id="selected-count">0 selected</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="form-submit-section">
+          <button
+            class="submit-button"
+            id="submit-btn"
+            style="border-radius: 24px"
+          >
+            Get Prediction
+          </button>
+          <button
+            class="reset-button"
+            id="reset-btn"
+            style="border-radius: 24px"
+          >
+            Clear Form
+          </button>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section-placeholder" id="results-section">
+          <h3>Prediction Results</h3>
+
+          <div class="prediction-box-container">
+            <textarea id="prediction-box" class="prediction-box" readonly>
+Click the Submit button to recieve your prediction.</textarea
+            >
+          </div>
+
+          <div
+            class="result-content"
+            id="result-content"
+            style="display: none"
+          ></div>
+        </div>
+      </div>
+
+      <br /><br /><br />
+    </main>
+
+    <script>
+      const backendURL = "https://svm-backend-eu5s.onrender.com/predict"; // Replace with your Render URL
+
+      // Bacteria list with genus names
+      const bacteriaList = [
+        "Blautia",
+        "Bifidobacterium",
+        "Faecalibacterium",
+        "[Eubacterium]_hallii_group",
+        "Collinsella",
+        "Escherichia-Shigella",
+        "Subdoligranulum",
+        "Agathobacter",
+        "Fusicatenibacter",
+        "Dialister",
+        "Romboutsia",
+        "[Ruminococcus]_torques_group",
+        "Streptococcus",
+        "Dorea",
+        "Megamonas",
+        "Anaerostipes",
+        "Bacteroides",
+        "Prevotella_9",
+        "Butyricicoccus",
+        "Megasphaera",
+        "Monoglobus",
+        "Ruminococcus",
+        "Erysipelotrichaceae_UCG-003",
+        "Alistipes",
+        "Akkermansia",
+        "Intestinibacter",
+        "Phascolarctobacterium",
+        "UCG-002",
+        "Lachnoclostridium",
+        "Veillonella",
+        "Halomonas",
+        "Clostridium_sensu_stricto_1",
+        "Adlercreutzia",
+        "CAG-352",
+        "[Eubacterium]_eligens_group",
+        "Enterococcus",
+        "Parabacteroides",
+        "Turicibacter",
+        "Lachnospira",
+        "Holdemanella",
+        "Lachnospiraceae_ND3007_group",
+        "Ligilactobacillus",
+        "[Eubacterium]_coprostanoligenes_group",
+        "Christensenellaceae_R-7_group",
+        "Haemophilus",
+        "UBA1819",
+        "[Clostridium]_innocuum_group",
+        "Incertae_Sedis",
+        "Catenibacterium",
+        "Flavonifractor",
+        "[Eubacterium]_ventriosum_group",
+        "Pediococcus",
+        "Parasutterella",
+        "Eggerthella",
+        "Limosilactobacillus",
+        "[Eubacterium]_ruminantium_group",
+        "Bilophila",
+        "NK4A214_group",
+        "Lachnospiraceae_UCG-010",
+        "Citrobacter",
+        "Paraprevotella",
+        "Fusobacterium",
+        "Erysipelatoclostridium",
+        "Lactococcus",
+        "Desulfovibrio",
+        "[Eubacterium]_brachy_group",
+        "Allisonella",
+        "Tyzzerella",
+        "Barnesiella",
+        "UCG-003",
+        "UCG-005",
+        "Psychrobacter",
+        "Lacticaseibacillus",
+        "Lactobacillus",
+        "Weissella",
+        "Clostridia_UCG-014",
+        "Mitsuokella",
+        "Odoribacter",
+        "P5D1-392",
+        "Olsenella",
+        "Negativibacillus",
+        "Sutterella",
+        "Muribaculaceae",
+        "Anaerotruncus",
+        "Family_XIII_UCG-001",
+        "Lactiplantibacillus",
+        "Lelliottia",
+        "Eubacterium",
+        "Peptococcus",
+        "Family_XIII_AD3011_group",
+        "Prevotellaceae_NK3B31_group",
+        "Senegalimassilia",
+        "Actinomyces",
+        "Tuzzerella",
+        "Tannerellaceae",
+        "Morganella",
+        "Clostridioides",
+        "DTU089",
+        "Kocuria",
+        "Butyricimonas",
+        "TM7x",
+        "Faecalicoccus",
+        "Roseburia",
+        "Enterorhabdus",
+        "Faecalitalea",
+        "Comamonas",
+        "Rothia",
+        "Slackia",
+        "Acidaminococcus",
+        "Cloacibacillus",
+        "Coprobacillus",
+        "Peptostreptococcus",
+        "Gemella",
+        "Colidextribacter",
+        "Gastranaerophilales",
+        "[Eubacterium]_siraeum_group",
+        "Holdemania",
+        "UCG-009",
+        "Alloprevotella",
+        "Staphylococcus",
+        "Howardella",
+        "Fructilactobacillus",
+        "Companilactobacillus",
+        "Methanobrevibacter",
+        "UCG-010",
+        "Christensenella",
+        "Rikenellaceae_RC9_gut_group",
+        "Solobacterium",
+        "Fenollaria",
+        "Phocea",
+        "Coprobacter",
+        "Intestinimonas",
+        "Catabacter",
+        "Pyramidobacter",
+        "Leuconostoc",
+        "Atopobium",
+        "Pseudomonas",
+        "F0332",
+        "[Eubacterium]_nodatum_group",
+        "Brevundimonas",
+        "Oxalobacter",
+        "Mogibacterium",
+        "Oscillibacter",
+        "Corynebacterium",
+        "Serratia",
+        "Parvimonas",
+        "Frisingicoccus",
+        "Catenisphaera",
+        "Chloroplast",
+        "Sneathia",
+        "Sanguibacteroides",
+        "Peptoniphilus",
+        "Dielma",
+        "Fournierella",
+        "Ezakiella",
+        "Anaerofustis",
+        "Saccharimonadaceae",
+        "RF39",
+        "Finegoldia",
+        "Porphyromonas",
+        "Gordonibacter",
+        "Terrisporobacter",
+        "Sarcina",
+        "Paludicola",
+        "Anaeroglobus",
+        "Bacillus",
+        "Varibaculum",
+        "Epulopiscium",
+        "Providencia",
+        "Salipaludibacillus",
+        "Paracoccus",
+        "Abiotrophia",
+        "Methanosphaera",
+        "Geobacillus",
+        "Campylobacter",
+        "Anaerococcus",
+        "Anaerofilum",
+        "Negativicoccus",
+        "Lawsonella",
+        "Aggregatibacter",
+        "Clostridia_vadinBB60_group",
+        "Scardovia",
+        "Defluviitaleaceae_UCG-011",
+        "Prevotella",
+        "Acinetobacter",
+        "Gardnerella",
+        "Hydrogenoanaerobacterium",
+        "Latilactobacillus",
+        "Candidatus_Saccharimonas",
+        "Chryseobacterium",
+        "Conservatibacter",
+        "W5053",
+        "DTU014",
+        "Candidatus_Stoquefichus",
+        "Mitochondria",
+        "Allobaculum",
+        "Victivallaceae",
+        "Sphingobacterium",
+        "Achromobacter",
+        "Brachybacterium",
+        "Levilactobacillus",
+        "Brevibacterium",
+        "Gallicola",
+        "Victivallis",
+        "Erysipelotrichaceae",
+        "Methylobacterium-Methylorubrum",
+        "Bosea",
+        "Mobiluncus",
+        "Anoxybacillus",
+        "Lachnospiraceae_NK4A136_group",
+        "Facklamia",
+        "Carnobacterium",
+        "Cetobacterium",
+        "Mycoplasma",
+        "Tetragenococcus",
+        "Lachnospiraceae_UCG-004",
+        "Jeotgalicoccus",
+        "Murdochiella",
+        "Sphingomonas",
+        "Dubosiella",
+        "Dietzia",
+        "Selenomonas",
+        "Schleiferilactobacillus",
+        "Arcanobacterium",
+        "Merdibacter",
+        "PeM15",
+        "Neisseria",
+        "Lapidilactobacillus",
+        "Izemoplasmatales",
+        "Pseudoclavibacter",
+        "Jonquetella",
+        "S5-A14a",
+        "Saccharimonadales",
+        "Enhydrobacter",
+        "Falsochrobactrum",
+        "Synergistes",
+        "Nocardioides",
+        "Planococcaceae",
+        "Nesterenkonia",
+        "Acidipila-Silvibacterium",
+        "Nakamurella",
+        "Prevotella_7",
+        "Sphingopyxis",
+        "Erysipelotrichaceae_UCG-006",
+        "Bryobacter",
+        "Blastococcus",
+        "Ileibacterium",
+        "Leptotrichia",
+        "Dermabacter",
+        "Cupriavidus",
+        "Asteroleplasma",
+        "Cloacibacterium",
+        "Cardiobacterium",
+        "Fluviicola",
+        "Filifactor",
+        "Helicobacter",
+        "Lautropia",
+        "Coprococcus",
+        "Lysinibacillus",
+        "Rubellimicrobium",
+        "Aquabacterium",
+        "Granulicella",
+        "Burkholderia-Caballeronia-Paraburkholderia",
+        "Veillonellaceae",
+        "Ammoniphilus",
+        "Muribaculum",
+        "Delftia",
+        "Leifsonia",
+        "Pelomonas",
+      ];
+
+      // Initialize bacteria checkboxes
+      function initBacteriaList() {
+        const bacteriaListDiv = document.getElementById("bacteria-list");
+        bacteriaListDiv.innerHTML = bacteriaList
+          .map(
+            (bacteria, index) =>
+              `<label class="bacteria-checkbox">
+          <input type="checkbox" value="${bacteria}" data-index="${index}" />
+          <span>${bacteria}</span>
+        </label>`,
+          )
+          .join("");
+        updateSelectedCount();
+      }
+
+      // Search functionality
+      document
+        .getElementById("bacteria-search")
+        .addEventListener("input", (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          document.querySelectorAll(".bacteria-checkbox").forEach((label) => {
+            const text = label.querySelector("span").textContent.toLowerCase();
+            label.style.display = text.includes(searchTerm) ? "flex" : "none";
+          });
+        });
+
+      // Track reads input
+      document.getElementById("reads-input").addEventListener("input", (e) => {
+        const reads = e.target.value.split(";").filter((v) => v.trim() !== "");
+        document.getElementById("read-count").textContent =
+          `${reads.length} values entered`;
+      });
+
+      // Update selected count
+      function updateSelectedCount() {
+        const checked = document.querySelectorAll(
+          ".bacteria-checkbox input:checked",
+        ).length;
+        document.getElementById("selected-count").textContent =
+          `${checked} selected`;
+      }
+
+      document.addEventListener("change", (e) => {
+        if (e.target.type === "checkbox") updateSelectedCount();
+      });
+
+      // Submit button
+      document
+        .getElementById("submit-btn")
+        .addEventListener("click", async () => {
+          const reads = document
+            .getElementById("reads-input")
+            .value.split(";")
+            .map((v) => v.trim())
+            .filter((v) => v !== "");
+          const selected = Array.from(
+            document.querySelectorAll(".bacteria-checkbox input:checked"),
+          ).map((input) => input.value);
+
+          if (reads.length === 0 || selected.length === 0) {
+            alert("Please enter read counts and select at least one bacteria.");
+            return;
+          }
+          if (reads.length !== selected.length) {
+            alert(
+              `Mismatch: ${reads.length} reads vs ${selected.length} bacteria.`,
+            );
+            return;
+          }
+
+          const predictionBox = document.getElementById("prediction-box");
+          const resultsSection = document.getElementById("results-section");
+          const resultContent = document.getElementById("result-content");
+
+          predictionBox.value = "Predicting...";
+
+          try {
+            const response = await fetch(backendURL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                reads: reads.map(Number),
+                genera: selected,
+              }),
+            });
+
+            const data = await response.json();
+
+            predictionBox.value = `Prediction: ${data.prediction_label ? "MDD" : "Control"}\nProbability: ${(data.prediction_probability * 100).toFixed(1)}%`;
+
+            resultContent.innerHTML = `
+        <div class="result-item">
+          <h4>Input Data Received</h4>
+          <p><strong>Read Counts:</strong> ${reads.join(", ")}</p>
+          <p><strong>Selected Genera:</strong> ${selected.join(", ")}</p>
+        </div>
+        <div class="result-item">
+          <h4>🤖 Prediction Result</h4>
+          <p style="font-size:1.05rem;font-weight:700;">${data.prediction_label ? "MDD" : "Control"} (${(data.prediction_probability * 100).toFixed(1)}%)</p>
+        </div>
+      `;
+            resultContent.style.display = "grid";
+            resultsSection.style.display = "block";
+            resultsSection.scrollIntoView({ behavior: "smooth" });
+          } catch (err) {
+            predictionBox.value = "❌ Error: Could not reach backend.";
+            console.error(err);
+          }
+        });
+
+      // Reset button
+      document.getElementById("reset-btn").addEventListener("click", () => {
+        document.getElementById("reads-input").value = "";
+        document.getElementById("bacteria-search").value = "";
+        document
+          .querySelectorAll(".bacteria-checkbox input")
+          .forEach((input) => (input.checked = false));
+        document
+          .querySelectorAll(".bacteria-checkbox")
+          .forEach((label) => (label.style.display = "flex"));
+        document.getElementById("prediction-box").value =
+          "Click the Submit button to receive your prediction.";
+        document.getElementById("result-content").style.display = "none";
+        updateSelectedCount();
+        document.getElementById("read-count").textContent = "0 values entered";
+      });
+
+      window.addEventListener("DOMContentLoaded", initBacteriaList);
+    </script>
+    <hr
+      style="
+        border: none;
+        height: 5px; /* thickness */
+        background-color: rgba(21, 30, 71, 0.7); /* neutral gray-blue */
+        opacity: 0.7; /* optional softness */
+        margin: 3rem 0;
+        margin-left: 200px;
+        margin-right: 200px;
+      "
+    />
+    <p style="text-align: center; font-weight: bold; font-size: 20px">
+      <span style="color: red">*</span> This tool is for educational and
+      research demonstration purposes only. It is not intended for clinical use
+      or medical diagnosis. <br /><br /><br />
+    </p>
+  </body>
+</html>

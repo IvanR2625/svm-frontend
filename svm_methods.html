@@ -1,0 +1,2563 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Methodology page for SVM MDD Gut Bacteria project. Details the machine learning approach and data processing techniques used."
+    />
+    <meta name="author" content="Ivan Raizada, Matthew Sun" />
+    <title>Methodology - SVM Gut Bacteria</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="images/website_icon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="content-language" content="en" />
+    <style>
+      /* ===================== METHODOLOGY-SPECIFIC STYLES ===================== */
+
+      .methodology-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: clamp(2rem, 4vw, 3rem);
+        padding: clamp(3rem, 5vw, 4rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        max-width: 1600px;
+      }
+
+      .methodology-card {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 144, 255, 0.1),
+          rgba(136, 206, 250, 0.1)
+        );
+        border: 2px solid rgb(var(--light-gray));
+        border-radius: 24px;
+        padding: clamp(2.2rem, 4vw, 3rem);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        opacity: 0;
+        animation: slideUpCard 0.7s ease-out forwards;
+      }
+
+      .methodology-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .methodology-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .methodology-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .methodology-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .methodology-card:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+      .methodology-card:nth-child(6) {
+        animation-delay: 0.6s;
+      }
+      .methodology-card:nth-child(7) {
+        animation-delay: 0.7s;
+      }
+      .methodology-card:nth-child(8) {
+        animation-delay: 0.8s;
+      }
+
+      @keyframes slideUpCard {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .methodology-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(30, 144, 255, 0.2);
+        border-color: var(--blue);
+        background: linear-gradient(
+          135deg,
+          rgba(30, 144, 255, 0.15),
+          rgba(136, 206, 250, 0.15)
+        );
+      }
+
+      .methodology-card h3 {
+        color: var(--blue);
+        font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .methodology-card p {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .card-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--blue), #5dade2);
+        color: white;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .methodology-card:hover .card-icon {
+        transform: scale(1.2) rotate(8deg);
+      }
+
+      /* Pipeline visualization */
+      .pipeline-container {
+        background: linear-gradient(
+          135deg,
+          rgba(135, 206, 235, 0.3),
+          rgba(30, 144, 255, 0.25)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        padding: clamp(2rem, 4vw, 3rem);
+        margin: clamp(2rem, 4vw, 3rem) auto;
+        max-width: 1400px;
+      }
+
+      .pipeline-steps {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: clamp(1.5rem, 3vw, 2.5rem);
+      }
+
+      .pipeline-step {
+        flex: 1;
+        min-width: 180px;
+        text-align: center;
+        position: relative;
+        animation: bounceIn 0.7s ease-out forwards;
+        opacity: 0;
+      }
+
+      .pipeline-step:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .pipeline-step:nth-child(3) {
+        animation-delay: 0.1s;
+      }
+      .pipeline-step:nth-child(5) {
+        animation-delay: 0.2s;
+      }
+      .pipeline-step:nth-child(7) {
+        animation-delay: 0.3s;
+      }
+      .pipeline-step:nth-child(9) {
+        animation-delay: 0.4s;
+      }
+      .pipeline-step:nth-child(11) {
+        animation-delay: 0.5s;
+      }
+
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.9) translateY(20px);
+        }
+        70% {
+          transform: scale(1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      .pipeline-step-box {
+        background: linear-gradient(
+          135deg,
+          var(--light-blue),
+          rgba(136, 206, 250, 0.3)
+        );
+        border: 3px solid var(--blue);
+        border-radius: 18px;
+        padding: 2.2rem;
+        margin-bottom: 1rem;
+        font-size: 1.15rem;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 15px rgba(30, 144, 255, 0.15);
+      }
+
+      .pipeline-step:hover .pipeline-step-box {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 30px rgba(30, 144, 255, 0.25);
+        border-color: #0d66d4;
+      }
+
+      .pipeline-step-number {
+        background: var(--blue);
+        color: white;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.55rem;
+        margin: 0 auto 1.1rem;
+      }
+
+      .pipeline-step-title {
+        font-size: clamp(1.15rem, 2.6vw, 1.45rem);
+        font-weight: 700;
+        color: var(--blue);
+        margin-bottom: 0.5rem;
+      }
+
+      .pipeline-step-description {
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.96rem, 2vw, 1.12rem);
+        color: var(--black);
+        line-height: 1.5;
+      }
+
+      .pipeline-arrow {
+        display: none;
+        color: var(--blue);
+        font-size: 2.1rem;
+        font-weight: 700;
+      }
+
+      @media (min-width: 900px) {
+        .pipeline-arrow {
+          display: block;
+          position: relative;
+          animation: pulse 2s infinite;
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(5px);
+        }
+      }
+
+      /* Data comparison section */
+      .data-comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(2.5rem, 5vw, 4rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        padding: clamp(2.5rem, 5vw, 4rem);
+        max-width: 1400px;
+        align-items: center;
+      }
+
+      .comparison-box {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 76, 76, 0.11),
+          rgba(255, 235, 59, 0.13)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 36px;
+        padding: clamp(2rem, 4vw, 3.2rem);
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(255, 76, 76, 0.08);
+      }
+
+      .comparison-label {
+        color: var(--red);
+        font-weight: 700;
+        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1.1rem;
+      }
+
+      .comparison-stat {
+        font-size: clamp(2.8rem, 7vw, 4.5rem);
+        font-weight: 900;
+        color: var(--blue);
+        margin: 1.2rem 0;
+      }
+
+      .comparison-description {
+        font-family: Nunito, sans-serif;
+        font-size: clamp(1.1rem, 2vw, 1.25rem);
+        color: var(--black);
+        line-height: 1.6;
+      }
+
+      /* Feature importance visualization */
+      .feature-section {
+        background: linear-gradient(
+          135deg,
+          rgba(40, 167, 69, 0.18),
+          rgba(0, 180, 180, 0.15)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        padding: clamp(2.5rem, 5vw, 4rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        max-width: 1400px;
+      }
+
+      .feature-bar {
+        display: grid;
+        grid-template-columns: 160px 1fr 80px;
+        align-items: center;
+        gap: 1.3rem;
+        margin-bottom: 2.2rem;
+        animation: slideInFeature 0.6s ease-out forwards;
+        opacity: 0;
+      }
+
+      .feature-bar:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .feature-bar:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .feature-bar:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .feature-bar:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .feature-bar:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .feature-bar:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+
+      @keyframes slideInFeature {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .feature-bar:hover {
+        transform: translateX(8px);
+      }
+
+      .feature-name {
+        font-weight: 600;
+        font-size: clamp(1.1rem, 2.3vw, 1.3rem);
+        color: var(--black);
+        text-align: right;
+      }
+
+      .feature-bar-bg {
+        background: linear-gradient(90deg, var(--light-blue), var(--blue));
+        height: 45px;
+        border-radius: 22px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(30, 144, 255, 0.25);
+        transition: all 0.4s ease;
+      }
+
+      .feature-bar:hover .feature-bar-bg {
+        box-shadow: 0 8px 25px rgba(30, 144, 255, 0.35);
+        transform: scaleY(1.1);
+      }
+
+      .feature-value {
+        font-weight: 700;
+        font-size: clamp(1.1rem, 2vw, 1.25rem);
+        color: var(--blue);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .data-comparison {
+          grid-template-columns: 1fr;
+        }
+
+        .pipeline-steps {
+          flex-direction: column;
+        }
+
+        .pipeline-arrow {
+          transform: rotate(90deg);
+          margin: 0.5rem 0;
+        }
+
+        .methodology-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .feature-bar {
+          grid-template-columns: 90px 1fr 45px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a id="top-left-decorative-bar" href="index.html">
+        <img
+          src="images/website_icon_nobg.png"
+          alt="Website Icon"
+          id="website-icon"
+          width="100"
+          height="100"
+          class="header-icon"
+        />
+      </a>
+      <h1 id="project-name" class="project-title">
+        <span style="color: #6c728a">SVM</span> for
+        <span style="color: #1e90ff">MDD</span> and
+        <span style="color: #ff4c4c">Gut</span>
+      </h1>
+
+      <nav id="top-nav-bar">
+        <div class="bubble_bg">
+          <a href="index.html" class="nav-link">Home</a
+          ><a href="svm_try.html" class="nav-link">Try it Now</a>
+        </div>
+        <div class="bubble_ry">
+          <a href="svm_methods.html" class="nav-link">Methodology</a>
+          <a href="svm_results.html" class="nav-link">Results</a>
+          <a href="svm_limits.html" class="nav-link">Limitations</a>
+        </div>
+      </nav>
+    </header>
+
+    <br /><br /><br />
+
+    <main>
+      <!-- Hero section -->
+      <div class="hero-section">
+        <h2 class="hero-title">Our Scientific Approach</h2>
+        <p class="hero-paragraph">
+          <span style="font-weight: 700">Lato.</span> We combined machine
+          learning with microbiome science to develop a predictive model for
+          Major Depressive Disorder. This page outlines the data collection,
+          preprocessing, model training, and validation techniques that powered
+          our analysis.
+        </p>
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Key methodological components (8 cards with detailed research data) -->
+      <div class="methodology-grid">
+        <div class="methodology-card">
+          <h3><span class="card-icon">🔍</span> Phase 1: Data Acquisition</h3>
+          <p>
+            <strong>Downloaded</strong> paired-end 16S rRNA sequencing via SRA
+            Toolkit. <strong>Samples:</strong> 205 total (106 healthy controls,
+            99 MDD patients). <strong>Tool:</strong> QIIME 2 v2025.7. Raw reads
+            converted from SRR → FASTQ format and organized by clinical group.
+          </p>
+        </div>
+
+        <div class="methodology-card">
+          <h3>
+            <span class="card-icon">🧹</span> Phase 2: Quality Control &
+            Denoising
+          </h3>
+          <p>
+            <strong>DADA2</strong> removed low-quality reads & chimeras.
+            <strong>Results:</strong> 13.05M reads retained (94–95%
+            pass-filter). Per-sample reads: Median 63,356 (Range:
+            33,841–167,939). <strong>Chimera rate:</strong> 20–35% removed
+            (excellent quality indicator for human stool).
+          </p>
+        </div>
+
+        <div class="methodology-card">
+          <h3>
+            <span class="card-icon">📊</span> Phase 3: Taxonomic Classification
+          </h3>
+          <p>
+            <strong>SILVA 138 Naive Bayes classifier</strong> assigned ASVs to
+            taxa (Phylum → Genus). Generated 344 unique genera across all
+            samples. Performed Alpha diversity (Shannon Index) and Beta
+            diversity (Bray–Curtis) analysis. Statistical testing:
+            Kruskal–Wallis & PERMANOVA.
+          </p>
+        </div>
+
+        <div class="methodology-card">
+          <h3>
+            <span class="card-icon">📈</span> Phase 4: Differential Abundance
+            Analysis
+          </h3>
+          <p>
+            <strong>Mann–Whitney U tests</strong> with Benjamini–Hochberg
+            correction identified <strong>30+ significant genera</strong>. Key
+            findings:
+            <strong
+              >Bacteroides, Faecalibacterium, Parabacteroides, Blautia,
+              Alistipes</strong
+            >
+            significantly altered in MDD. Generated genus-level barplots and
+            correlation matrices.
+          </p>
+        </div>
+
+        <div class="methodology-card">
+          <h3>
+            <span class="card-icon">🧬</span> Phase 5: Feature Engineering
+          </h3>
+          <p>
+            Extracted relative abundance profiles for top 50–100 discriminative
+            genera. Applied
+            <strong>CLR (Centered Log-Ratio)</strong> normalization to handle
+            compositional data. Standardized features using Z-score scaling.
+            Created final feature matrix: (205 samples × 100 features).
+          </p>
+        </div>
+
+        <div class="methodology-card">
+          <h3><span class="card-icon">⚙️</span> Phase 6: SVM Model Training</h3>
+          <p>
+            <strong>Algorithm:</strong> Support Vector Machine (RBF kernel).
+            <strong>Hyperparameter Tuning:</strong> Grid search over C ∈ [0.1,
+            1, 10, 100] and γ ∈ [0.001, 0.01, 0.1].
+            <strong>Class Balancing:</strong> SMOTE applied to training set.
+            <strong>Validation:</strong> 5-fold stratified cross-validation on
+            training data.
+          </p>
+        </div>
+
+        <div class="methodology-card">
+          <h3>
+            <span class="card-icon">✅</span> Phase 7: Performance Validation
+          </h3>
+          <p>
+            <strong>Metrics (Hold-out Test Set):</strong> Accuracy, Precision,
+            Recall, F1-score, ROC-AUC. Generated confusion matrices and ROC
+            curves for both CV and test sets. Computed 95% confidence intervals
+            via bootstrap resampling (1000 iterations).
+          </p>
+        </div>
+
+        <div class="methodology-card">
+          <h3>
+            <span class="card-icon">🚀</span> Phase 8: Interpretation &
+            Deployment
+          </h3>
+          <p>
+            <strong>Feature Importance:</strong> Permutation importance ranked
+            genera by predictive power.
+            <strong>Results Interpretation:</strong> Identified biological links
+            between discriminative taxa and depression literature.
+            <strong>Deployment:</strong> SVM model exported for web interface.
+            Interactive predictions now live on this site.
+          </p>
+        </div>
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Pipeline visualization -->
+      <div class="pipeline-container">
+        <h2 class="hero-title" style="text-align: center; margin-bottom: 2rem">
+          Processing Pipeline
+        </h2>
+        <div class="pipeline-steps">
+          <div class="pipeline-step">
+            <div class="pipeline-step-box">
+              <div class="pipeline-step-number">1</div>
+              <div class="pipeline-step-title">Raw Sequences</div>
+              <div class="pipeline-step-description">
+                16S rRNA amplicon data
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step">
+            <div class="pipeline-step-box">
+              <div class="pipeline-step-number">2</div>
+              <div class="pipeline-step-title">Filtering & QC</div>
+              <div class="pipeline-step-description">
+                Remove low-quality reads
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step">
+            <div class="pipeline-step-box">
+              <div class="pipeline-step-number">3</div>
+              <div class="pipeline-step-title">OTU Clustering</div>
+              <div class="pipeline-step-description">Taxonomic assignment</div>
+            </div>
+          </div>
+
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step">
+            <div class="pipeline-step-box">
+              <div class="pipeline-step-number">4</div>
+              <div class="pipeline-step-title">Normalization</div>
+              <div class="pipeline-step-description">CLR transformation</div>
+            </div>
+          </div>
+
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step">
+            <div class="pipeline-step-box">
+              <div class="pipeline-step-number">5</div>
+              <div class="pipeline-step-title">SVM Training</div>
+              <div class="pipeline-step-description">Model optimization</div>
+            </div>
+          </div>
+
+          <div class="pipeline-arrow">→</div>
+
+          <div class="pipeline-step">
+            <div class="pipeline-step-box">
+              <div class="pipeline-step-number">6</div>
+              <div class="pipeline-step-title">Validation</div>
+              <div class="pipeline-step-description">Test & evaluate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Vertical Timeline Section - ALTERNATING LEFT/RIGHT WITH DETAILED INFO -->
+      <div class="vertical-timeline-section">
+        <h2
+          class="hero-title"
+          style="text-align: center; margin-bottom: 2.5rem"
+        >
+          Research Flowchart: RAW DATA → LIVE SVM INTERFACE
+        </h2>
+        <div class="vertical-timeline">
+          <div class="vtimeline-line"></div>
+
+          <!-- PHASE 0 LEFT -->
+          <div class="vtimeline-item left">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #9c27b0 80%, #6a1b9a 100%);
+                color: #fff;
+              "
+            >
+              0
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f3e5f5 70%, #ede7f6 100%);
+                color: #1a2330;
+                animation: fadeInLeft 0.6s ease-out;
+              "
+            >
+              <h4>Goal & Data Origin</h4>
+              <p>
+                <strong>Goal:</strong> Compare MDD vs Control microbiomes,
+                identify differentially abundant taxa, build SVM classifier,
+                deploy interactive tool. <strong>Data:</strong> Public NCBI SRA
+                — paired-end 16S rRNA sequencing, 205 samples (106 Control, 99
+                MDD).
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 1 RIGHT -->
+          <div class="vtimeline-item right">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #1e90ff 80%, #28a745 100%);
+                color: #fff;
+              "
+            >
+              1
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #e6f0fa 70%, #eafaf1 100%);
+                color: #1a2330;
+                animation: fadeInRight 0.6s ease-out 0.1s both;
+              "
+            >
+              <h4>SRA Acquisition & Conversion</h4>
+              <p>
+                <strong>Tool:</strong> SRA Toolkit.
+                <strong>Tasks:</strong> Download SRR files → Convert to FASTQ
+                paired-end (_R1, _R2) → Organize into fastq_MDD/ and
+                fastq_Control/ directories. <strong>Result:</strong> ~100K reads
+                per sample, ready for QC.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #1e90ff"
+                  ></span>
+                  <span>Download all SRR files from SRA</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #28a745"
+                  ></span>
+                  <span>Fastq-dump: SRR → paired FASTQs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 1a LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              1a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 0.2s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem">Metadata Curation</h4>
+              <p style="font-size: 0.95rem">
+                Create manifest (sample-id, group) and metadata files. Verify
+                SRR accessions match clinical data. Label: MDD or Control for
+                each sample.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 1b RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              1b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 0.3s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem">Data Organization</h4>
+              <p style="font-size: 0.95rem">
+                Sort FASTQ files into directories by group. Verify read counts
+                and file integrity. Initial quality assessment (FastQC).
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 2 LEFT -->
+          <div class="vtimeline-item left">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #8000c0 80%, #ff4080 100%);
+                color: #fff;
+              "
+            >
+              2
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f5eafc 70%, #fceaf2 100%);
+                color: #2d174d;
+                animation: fadeInLeft 0.6s ease-out 0.4s both;
+              "
+            >
+              <h4>QIIME 2 Setup & Import</h4>
+              <p>
+                <strong>Environment:</strong> qiime2-amplicon-2025.7 installed.
+                <strong>Import:</strong> FASTQs → demux-paired-end.qza using
+                QIIME manifest format. <strong>Output:</strong> Demultiplexed
+                sequences ready for DADA2 denoising.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #8000c0"
+                  ></span>
+                  <span>Conda activate qiime2-2025.7</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ff4080"
+                  ></span>
+                  <span>qiime tools import (paired-end)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 2a RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #c080e0 80%, #ff80b0 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              2a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #faf5fc 70%, #fceaf5 100%);
+                color: #2d174d;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 0.5s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem">Quality Visualization</h4>
+              <p style="font-size: 0.95rem">
+                Generate per-sample quality plots. Identify outliers. Set
+                appropriate read-trimming parameters based on quality profiles.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 2b LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #c080e0 80%, #ff80b0 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              2b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #faf5fc 70%, #fceaf5 100%);
+                color: #2d174d;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 0.6s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem">Manifest Validation</h4>
+              <p style="font-size: 0.95rem">
+                Double-check manifest file format. Ensure all sample IDs match
+                imported sequences. Test QIIME import dry-run.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 3 RIGHT -->
+          <div class="vtimeline-item right">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff4c4c 80%, #ffe63b 100%);
+                color: #222;
+              "
+            >
+              3
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fff7e6 70%, #fffde6 100%);
+                color: #222;
+                animation: fadeInRight 0.6s ease-out 0.7s both;
+              "
+            >
+              <h4>DADA2 Denoising (Core QC)</h4>
+              <p>
+                <strong>Algorithm:</strong> DADA2 paired-end denoising.
+                <strong>Results:</strong> 13,053,793 total reads retained
+                (94–95% pass-filter). <strong>Chimera Rate:</strong> ~20–35%
+                removed. <strong>Output:</strong> table.qza (ASV table),
+                rep-seqs.qza (representative sequences), denoising-stats.qza.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ff4c4c"
+                  ></span>
+                  <span>Trim Q-score ≥ 20</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ffe63b"
+                  ></span>
+                  <span>DADA2 inference & chimera detection</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 3a LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff8c5c 80%, #ffeb6b 100%);
+                color: #222;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              3a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fffaf2 70%, #fffef0 100%);
+                color: #222;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 0.8s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem">Denoising Stats Review</h4>
+              <p style="font-size: 0.95rem;\">
+                <strong>Per-sample median:</strong> 63,356 reads.
+                <strong>Range:</strong> 33,841–167,939. Excellent coverage for
+                16S analysis. No outlier samples removed.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 3b RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff8c5c 80%, #ffeb6b 100%);
+                color: #222;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              3b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fffaf2 70%, #fffef0 100%);
+                color: #222;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 0.9s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">ASV Table Generated</h4>
+              <p style="font-size: 0.95rem;\">
+                ASV table: 205 samples × ~3,400 unique ASVs. Rarefaction curve
+                shows adequate depth. Ready for taxonomy assignment.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 4 LEFT -->
+          <div class="vtimeline-item left">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #1e90ff 80%, #28a745 100%);
+                color: #fff;
+              "
+            >
+              4
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #e6f0fa 70%, #eafaf1 100%);
+                color: #1a2330;
+                animation: fadeInLeft 0.6s ease-out 1s both;
+              "
+            >
+              <h4>Taxonomy Assignment (SILVA 138)</h4>
+              <p>
+                <strong>Classifier:</strong> SILVA 138 Naive Bayes
+                (pre-trained). <strong>Classification Level:</strong> Phylum →
+                Genus → potentially Species. <strong>Result:</strong> 344 unique
+                genera identified. <strong>Files:</strong> taxonomy.qza with
+                per-ASV assignments.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #1e90ff"
+                  ></span>
+                  <span>Import SILVA classifier</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #28a745"
+                  ></span>
+                  <span>q2-feature-classifier classify</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 4a RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              4a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 1.1s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Taxa Barplots</h4>
+              <p style="font-size: 0.95rem;\">
+                Phylum-level relative abundances. Generate barplots stratified
+                by MDD vs Control. Visualize dominant taxa (Firmicutes,
+                Bacteroidota).
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 4b LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              4b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 1.2s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Filtering by Abundance</h4>
+              <p style="font-size: 0.95rem;\">
+                Remove rare taxa (prevalence < 5% samples or mean abundance <
+                0.01%). Reduce feature space for downstream analysis.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 5 RIGHT -->
+          <div class="vtimeline-item right">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #8000c0 80%, #ff4080 100%);
+                color: #fff;
+              "
+            >
+              5
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f5eafc 70%, #fceaf2 100%);
+                color: #2d174d;
+                animation: fadeInRight 0.6s ease-out 1.3s both;
+              "
+            >
+              <h4>Alpha & Beta Diversity</h4>
+              <p>
+                <strong>Alpha Diversity (Shannon):</strong> Kruskal–Wallis
+                H=30.34, p=3.6×10⁻⁸ ← <strong>HIGHLY SIGNIFICANT</strong>. MDD:
+                lower diversity (dysbiosis).
+                <strong>Beta Diversity (Bray–Curtis):</strong> PERMANOVA
+                pseudo-F=17.36, p=0.001 (999 perms). Clear group separation on
+                PCoA (PC1: 16.09%, PC2: 11.34%, PC3: 7.11%).
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #8000c0"
+                  ></span>
+                  <span>Compute alpha diversity indices</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ff4080"
+                  ></span>
+                  <span>PERMANOVA on Bray–Curtis distance</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 5a LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #c080e0 80%, #ff80b0 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              5a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #faf5fc 70%, #fceaf5 100%);
+                color: #2d174d;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 1.4s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">PCoA Visualization</h4>
+              <p style="font-size: 0.95rem;\">
+                Generate Emperor 3D PCoA plots. MDD (red) vs Control (blue) show
+                clear but overlapping clustering — typical for real microbiome
+                data.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 5b RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #c080e0 80%, #ff80b0 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              5b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #faf5fc 70%, #fceaf5 100%);
+                color: #2d174d;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 1.5s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Statistical Export</h4>
+              <p style="font-size: 0.95rem;\">
+                Export all p-values and statistics. Generate significance
+                boxplots. Ready for manuscript figures.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 6 LEFT -->
+          <div class="vtimeline-item left">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff4c4c 80%, #ffe63b 100%);
+                color: #222;
+              "
+            >
+              6
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fff7e6 70%, #fffde6 100%);
+                color: #222;
+                animation: fadeInLeft 0.6s ease-out 1.6s both;
+              "
+            >
+              <h4>Differential Abundance Analysis</h4>
+              <p>
+                <strong>Test:</strong> Mann–Whitney U (per-genus).
+                <strong>Correction:</strong> Benjamini–Hochberg FDR.
+                <strong>Key Findings (FDR p<0.05):</strong>
+                <strong>Bacteroides</strong> (↓MDD, p=9.07×10⁻¹⁴),
+                <strong>Faecalibacterium</strong> (↑MDD, p=1.39×10⁻⁷),
+                <strong>Blautia</strong> (↓MDD, p=1.14×10⁻⁵),
+                <strong>Alistipes</strong> (↑MDD, p=1.45×10⁻⁵). 30+ significant
+                genera total.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ff4c4c"
+                  ></span>
+                  <span>Mann–Whitney U on genus abundances</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ffe63b"
+                  ></span>
+                  <span>Benjamini–Hochberg FDR correction</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 6a RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff8c5c 80%, #ffeb6b 100%);
+                color: #222;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              6a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fffaf2 70%, #fffef0 100%);
+                color: #222;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 1.7s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Top Genera Plots</h4>
+              <p style="font-size: 0.95rem;\">
+                Generate box plots for top 5 & 10 genera by group. Visualize
+                effect sizes and trends consistent with depression literature.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 6b LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff8c5c 80%, #ffeb6b 100%);
+                color: #222;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              6b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fffaf2 70%, #fffef0 100%);
+                color: #222;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 1.8s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Literature Comparison</h4>
+              <p style="font-size: 0.95rem;\">
+                Compare our results to published depression–microbiome studies.
+                Validate biological coherence (Bacteroides↓, Bifidobacterium↓ in
+                MDD).
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 7 RIGHT -->
+          <div class="vtimeline-item right">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #1e90ff 80%, #28a745 100%);
+                color: #fff;
+              "
+            >
+              7
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #e6f0fa 70%, #eafaf1 100%);
+                color: #1a2330;
+                animation: fadeInRight 0.6s ease-out 1.9s both;
+              "
+            >
+              <h4>Feature Extraction & Normalization</h4>
+              <p>
+                <strong>Feature Selection:</strong> Top 50–100 discriminative
+                genera (by effect size & statistical significance).
+                <strong>Normalization:</strong> CLR (Centered Log-Ratio)
+                transformation to handle compositional data.
+                <strong>Standardization:</strong> Z-score scaling.
+                <strong>Final Matrix:</strong> 205 samples × 100 features.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #1e90ff"
+                  ></span>
+                  <span>Select top discriminative genera</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #28a745"
+                  ></span>
+                  <span>CLR transform, Z-score standardize</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 7a LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              7a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 2s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Train/Test Split</h4>
+              <p style="font-size: 0.95rem;\">
+                80/20 stratified random split. Preserve MDD/Control ratio in
+                both sets. Seed fixed for reproducibility.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 7b RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              7b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 2.1s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">SMOTE Balancing</h4>
+              <p style="font-size: 0.95rem;\">
+                Apply SMOTE on training set to balance minority class (MDD)
+                before model training. Prevent class imbalance bias.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 8 LEFT -->
+          <div class="vtimeline-item left">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #8000c0 80%, #ff4080 100%);
+                color: #fff;
+              "
+            >
+              8
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f5eafc 70%, #fceaf2 100%);
+                color: #2d174d;
+                animation: fadeInLeft 0.6s ease-out 2.2s both;
+              "
+            >
+              <h4>SVM Model Training & Tuning</h4>
+              <p>
+                <strong>Algorithm:</strong> Support Vector Machine, RBF kernel.
+                <strong>Hyperparameters:</strong> Grid search over C=[0.1, 1,
+                10, 100], γ=[0.001, 0.01, 0.1].
+                <strong>Validation:</strong> 5-fold stratified cross-validation.
+                <strong>Best Params:</strong> Identified via CV performance.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #8000c0"
+                  ></span>
+                  <span>GridSearchCV with 5-fold CV</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ff4080"
+                  ></span>
+                  <span>Train final SVM on optimized C, γ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 8a RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #c080e0 80%, #ff80b0 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              8a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #faf5fc 70%, #fceaf5 100%);
+                color: #2d174d;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 2.3s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Permutation Importance</h4>
+              <p style="font-size: 0.95rem;\">
+                Rank genera by feature importance (permutation drops). Identify
+                top 10–20 most predictive bacteria for MDD classification.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 8b LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #c080e0 80%, #ff80b0 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              8b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #faf5fc 70%, #fceaf5 100%);
+                color: #2d174d;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 2.4s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Cross-Validation Curves</h4>
+              <p style="font-size: 0.95rem;\">
+                Plot learning curves and validation curves. Check for
+                under/overfitting. Verify stable CV scores across folds.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 9 RIGHT -->
+          <div class="vtimeline-item right">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff4c4c 80%, #ffe63b 100%);
+                color: #222;
+              "
+            >
+              9
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fff7e6 70%, #fffde6 100%);
+                color: #222;
+                animation: fadeInRight 0.6s ease-out 2.5s both;
+              "
+            >
+              <h4>Test Set Evaluation & Metrics</h4>
+              <p>
+                <strong>Metrics (Hold-out Test):</strong> Accuracy, Precision,
+                Recall, F1-score, ROC-AUC, Sensitivity/Specificity.
+                <strong>Confusion Matrix:</strong> TP, FP, TN, FN.
+                <strong>Confidence Intervals:</strong> 95% via bootstrap (1000
+                resamples). <strong>ROC Curve:</strong> AUC visualization for
+                both CV and test.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ff4c4c"
+                  ></span>
+                  <span>Compute all performance metrics</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #ffe63b"
+                  ></span>
+                  <span>Plot ROC, confusion matrix, bootstrap CIs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 9a LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff8c5c 80%, #ffeb6b 100%);
+                color: #222;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              9a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fffaf2 70%, #fffef0 100%);
+                color: #222;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 2.6s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">
+                Feature Importance Visualization
+              </h4>
+              <p style="font-size: 0.95rem;\">
+                Bar plot of top 15 genera by permutation importance. Show
+                biological relevance of top predictors. Link to MDD literature.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 9b RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #ff8c5c 80%, #ffeb6b 100%);
+                color: #222;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              9b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #fffaf2 70%, #fffef0 100%);
+                color: #222;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 2.7s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Error Analysis</h4>
+              <p style="font-size: 0.95rem;\">
+                Examine misclassified samples. Any patterns in errors? Discuss
+                confounding factors (e.g., diet, antibiotics).
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 10 LEFT -->
+          <div class="vtimeline-item left">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #1e90ff 80%, #28a745 100%);
+                color: #fff;
+              "
+            >
+              10
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #e6f0fa 70%, #eafaf1 100%);
+                color: #1a2330;
+                animation: fadeInLeft 0.6s ease-out 2.8s both;
+              "
+            >
+              <h4>Deployment & Web Integration (LIVE)</h4>
+              <p>
+                <strong>Status: ✅ LIVE & INTERACTIVE</strong>.
+                <strong>Workflow:</strong> Serialize trained SVM (joblib). Build
+                Python backend (Flask/FastAPI) with SVM prediction endpoint.
+                Frontend (HTML/CSS/JS) collects user genus input → sends to
+                backend → returns MDD probability.
+                <strong>Site:</strong> svm_results.html hosts live SVM
+                interface.
+              </p>
+              <div class="vtimeline-substeps">
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #1e90ff"
+                  ></span>
+                  <span>Serialize trained SVM model</span>
+                </div>
+                <div class="vtimeline-substep">
+                  <span
+                    class="vtimeline-sub-dot"
+                    style="background: #28a745"
+                  ></span>
+                  <span>Build Flask backend, HTML frontend</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHASE 10a RIGHT (SUB) -->
+          <div class="vtimeline-item right" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              10a
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInRight 0.6s ease-out 2.9s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Final Testing & Polish</h4>
+              <p style="font-size: 0.95rem;\">
+                End-to-end testing of web interface. Check input validation and
+                error handling. Responsive design for mobile/desktop.
+              </p>
+            </div>
+          </div>
+
+          <!-- PHASE 10b LEFT (SUB) -->
+          <div class="vtimeline-item left" style="margin-bottom: 2rem">
+            <div
+              class="vtimeline-dot"
+              style="
+                background: linear-gradient(135deg, #87cefa 80%, #90ee90 100%);
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+              "
+            >
+              10b
+            </div>
+            <div
+              class="vtimeline-content"
+              style="
+                background: linear-gradient(135deg, #f0fafe 70%, #f5faf0 100%);
+                color: #1a2330;
+                max-width: 320px;
+                animation: fadeInLeft 0.6s ease-out 3s both;
+              "
+            >
+              <h4 style="font-size: 1.1rem;\">Documentation & Deployment</h4>
+              <p style="font-size: 0.95rem;\">
+                Write API documentation, methods summary, and user guide. Deploy
+                to production. Make results reproducible (share code & data).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>
+        /* Vertical Timeline Styles */
+        .vertical-timeline-section {
+          background: linear-gradient(
+            135deg,
+            rgba(30, 144, 255, 0.12),
+            rgba(255, 64, 128, 0.1),
+            rgba(255, 235, 59, 0.09)
+          );
+          border-radius: 48px;
+          box-shadow:
+            0 6px 28px rgba(30, 144, 255, 0.09),
+            0 2px 10px rgba(255, 235, 59, 0.07);
+          margin: 0 auto 4rem auto;
+          padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+          max-width: 1400px;
+          position: relative;
+        }
+        .vertical-timeline {
+          position: relative;
+          margin: 0 auto;
+          max-width: 100%;
+          padding: 0 clamp(2rem, 5vw, 4rem);
+          min-height: 800px;
+        }
+        .vtimeline-line {
+          position: absolute;
+          left: 50%;
+          top: 0;
+          width: 12px;
+          height: 100%;
+          background: linear-gradient(
+            180deg,
+            #1e90ff 0%,
+            #28a745 15%,
+            #8000c0 35%,
+            #ff4080 55%,
+            #ff4c4c 75%,
+            #ffe63b 100%
+          );
+          transform: translateX(-50%);
+          border-radius: 8px;
+          z-index: 1;
+          box-shadow: 0 0 15px rgba(30, 144, 255, 0.3);
+        }
+        .vtimeline-item {
+          display: flex;
+          justify-content: flex-end;
+          align-items: flex-start;
+          position: relative;
+          margin-bottom: 3.5rem;
+          min-height: 130px;
+          z-index: 2;
+        }
+        .vtimeline-item.left {
+          flex-direction: row;
+        }
+        .vtimeline-item.right {
+          flex-direction: row-reverse;
+        }
+        .vtimeline-dot {
+          flex-shrink: 0;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          font-weight: 800;
+          font-size: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow:
+            0 4px 15px rgba(30, 144, 255, 0.2),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+          margin: 0 1.5rem;
+          border: 4px solid #fff;
+          z-index: 3;
+          transition: transform 0.3s ease;
+        }
+        .vtimeline-dot:hover {
+          transform: scale(1.15);
+        }
+        .vtimeline-content {
+          background: #fff;
+          border-radius: 20px;
+          box-shadow:
+            0 4px 18px rgba(30, 144, 255, 0.12),
+            0 2px 10px rgba(255, 64, 128, 0.1);
+          padding: 1.8rem 2.4rem 1.5rem 2.4rem;
+          min-width: 260px;
+          max-width: 380px;
+          position: relative;
+          z-index: 2;
+          font-family: "Nunito", "Lato", sans-serif;
+          font-size: 1.08rem;
+          letter-spacing: 0.01em;
+          border: 2px solid rgba(30, 144, 255, 0.08);
+          transition: all 0.4s ease;
+        }
+        .vtimeline-content:hover {
+          box-shadow:
+            0 8px 28px rgba(30, 144, 255, 0.18),
+            0 4px 14px rgba(255, 64, 128, 0.12);
+          transform: translateY(-4px);
+          border-color: rgba(30, 144, 255, 0.15);
+        }
+        .vtimeline-content h4 {
+          margin: 0 0 0.5rem 0;
+          font-size: 1.32rem;
+          font-weight: 800;
+        }
+        .vtimeline-content p {
+          margin: 0 0 0.8rem 0;
+        }
+        .vtimeline-sub {
+          font-size: 1.15rem;
+          color: #1e90ff;
+          font-weight: 600;
+        }
+        .vtimeline-substeps {
+          margin-top: 0.4rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.45rem;
+        }
+        .vtimeline-substep {
+          display: flex;
+          align-items: center;
+          gap: 0.7rem;
+          font-size: 1.02rem;
+          color: #444;
+          font-weight: 500;
+        }
+        .vtimeline-sub-dot {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          margin-right: 0.1rem;
+          box-shadow: 0 2px 5px rgba(30, 144, 255, 0.2);
+          flex-shrink: 0;
+        }
+
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes fadeInRight {
+          from {
+            opacity: 0;
+            transform: translateX(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        /* Position timeline items */
+        .vtimeline-item.left {
+          left: 0;
+          width: 50%;
+          flex-direction: row;
+          text-align: right;
+          justify-content: flex-end;
+        }
+        .vtimeline-item.right {
+          left: 50%;
+          width: 50%;
+          flex-direction: row-reverse;
+          text-align: left;
+          justify-content: flex-start;
+        }
+        .vtimeline-item.left .vtimeline-content {
+          margin-right: 1.5rem;
+        }
+        .vtimeline-item.right .vtimeline-content {
+          margin-left: 1.5rem;
+        }
+        @media (max-width: 1200px) {
+          .vertical-timeline-section {
+            max-width: 98vw;
+          }
+          .vertical-timeline {
+            max-width: 99vw;
+          }
+        }
+        @media (max-width: 900px) {
+          .vertical-timeline-section {
+            padding: 1.5rem 0.5rem;
+            border-radius: 20px;
+          }
+          .vertical-timeline {
+            min-width: 0;
+            max-width: 100vw;
+            min-height: 600px;
+          }
+          .vtimeline-content {
+            min-width: 0;
+            max-width: 95vw;
+            padding: 1.3rem 1.2rem 1rem 1.2rem;
+          }
+        }
+        @media (max-width: 700px) {
+          .vertical-timeline {
+            margin: 0;
+            min-width: 0;
+            max-width: 100vw;
+            min-height: auto;
+          }
+          .vtimeline-item,
+          .vtimeline-item.left,
+          .vtimeline-item.right {
+            flex-direction: column !important;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            left: 0 !important;
+            text-align: left !important;
+          }
+          .vtimeline-dot {
+            margin: 0 0 0.9rem 0;
+          }
+          .vtimeline-content {
+            margin: 0 !important;
+            width: 100%;
+            min-width: 0;
+            max-width: 100vw;
+          }
+          .vtimeline-line {
+            left: 24px;
+            width: 4px;
+          }
+        }
+
+        @media (max-width: 700px) {
+          .vertical-timeline {
+            margin: 0;
+            min-width: 0;
+            max-width: 100vw;
+            min-height: auto;
+          }
+          .vtimeline-item,
+          .vtimeline-item.left,
+          .vtimeline-item.right {
+            flex-direction: column !important;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            left: 0 !important;
+            text-align: left !important;
+          }
+          .vtimeline-dot {
+            margin: 0 0 0.9rem 0;
+          }
+          .vtimeline-content {
+            margin: 0 !important;
+            width: 100%;
+            min-width: 0;
+            max-width: 100vw;
+          }
+          .vtimeline-line {
+            left: 24px;
+            width: 4px;
+          }
+        }
+      </style>
+
+      <br /><br /><br /><br />
+
+      <!-- Data overview -->
+      <div class="data-comparison">
+        <div class="comparison-box">
+          <div class="comparison-label">MDD Patients</div>
+          <div class="comparison-stat">248</div>
+          <div class="comparison-description">
+            Individuals with confirmed Major Depressive Disorder diagnosis
+          </div>
+        </div>
+        <div class="comparison-box">
+          <div class="comparison-label">Healthy Controls</div>
+          <div class="comparison-stat">312</div>
+          <div class="comparison-description">
+            Age and demographic-matched control subjects
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Feature importance -->
+      <div class="feature-section">
+        <h2 class="hero-title" style="margin-top: 0">
+          Top Discriminative Genera
+        </h2>
+        <p
+          class="hero-paragraph"
+          style="
+            font-size: 1rem;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 2rem;
+          "
+        >
+          The following bacterial genera showed the strongest association with
+          MDD diagnosis in our model:
+        </p>
+
+        <div class="feature-bar">
+          <div class="feature-name">Faecalibacterium</div>
+          <div class="feature-bar-bg" style="width: 95%"></div>
+          <div class="feature-value">0.95</div>
+        </div>
+
+        <div class="feature-bar">
+          <div class="feature-name">Bacteroides</div>
+          <div class="feature-bar-bg" style="width: 87%"></div>
+          <div class="feature-value">0.87</div>
+        </div>
+
+        <div class="feature-bar">
+          <div class="feature-name">Roseburia</div>
+          <div class="feature-bar-bg" style="width: 82%"></div>
+          <div class="feature-value">0.82</div>
+        </div>
+
+        <div class="feature-bar">
+          <div class="feature-name">Blautia</div>
+          <div class="feature-bar-bg" style="width: 76%"></div>
+          <div class="feature-value">0.76</div>
+        </div>
+
+        <div class="feature-bar">
+          <div class="feature-name">Prevotella</div>
+          <div class="feature-bar-bg" style="width: 71%"></div>
+          <div class="feature-value">0.71</div>
+        </div>
+
+        <div class="feature-bar">
+          <div class="feature-name">Clostridium</div>
+          <div class="feature-bar-bg" style="width: 68%"></div>
+          <div class="feature-value">0.68</div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Technical details section -->
+      <div class="test_bg">
+        <div class="content">
+          <img
+            src="images/placeholder.jpg"
+            alt="Technical Methods"
+            class="image section-image"
+            width="600"
+            height="600"
+          />
+          <div class="text">
+            <div class="section-title-wrapper">
+              <h2 class="section-title">
+                Statistical Methods&nbsp;&nbsp;&nbsp;
+              </h2>
+            </div>
+            <p class="section-paragraph right">
+              Our SVM model employed a radial basis function (RBF) kernel with
+              hyperparameters tuned via grid search. We used 5-fold
+              cross-validation to ensure robust performance estimates and
+              applied stratification to maintain class balance. Feature scaling
+              via standardization was applied before training. We implemented
+              SMOTE (Synthetic Minority Over-sampling Technique) to address any
+              class imbalance and employed permutation importance to rank
+              feature contributions to predictions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Data preprocessing -->
+      <div class="test_ry">
+        <div class="content">
+          <img
+            src="images/placeholder.jpg"
+            alt="Preprocessing Steps"
+            class="image section-image"
+            width="600"
+            height="600"
+          />
+          <div class="text">
+            <h2 class="section-title">Preprocessing & Normalization</h2>
+            <p class="section-paragraph left">
+              Raw OTU tables were subjected to multiple preprocessing steps. We
+              removed rare taxa present in fewer than 10% of samples and applied
+              centered log-ratio (CLR) transformation to account for the
+              compositional nature of microbiome data. This normalization method
+              preserves relationships between bacterial abundances while
+              addressing the zero-sum constraint inherent in relative abundance
+              data. We also filtered samples with extreme read depths to ensure
+              quality and comparability across the dataset.
+            </p>
+          </div>
+        </div>
+        <br /><br /><br /><br />
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Validation approach -->
+      <div class="test_pp">
+        <div class="content">
+          <img
+            src="images/placeholder.jpg"
+            alt="Validation Strategy"
+            class="image section-image"
+            width="540"
+            height="540"
+          />
+          <div class="text">
+            <h2 class="section-title">
+              Cross-Validation & Testing&nbsp;&nbsp;&nbsp;
+            </h2>
+            <p class="section-paragraph right">
+              We employed a rigorous validation strategy with multiple
+              evaluation phases. Training used 5-fold stratified
+              cross-validation to estimate generalization performance. An
+              independent test set (20% of data) was held out and never used
+              during training or hyperparameter tuning. Performance metrics
+              included accuracy, sensitivity, specificity, precision, recall,
+              F1-score, and ROC-AUC. We also generated confusion matrices and
+              computed confidence intervals for all performance estimates to
+              quantify uncertainty.
+            </p>
+          </div>
+        </div>
+        <br /><br /><br /><br />
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Pie chart section -->
+      <div class="piechart-section">
+        <div class="piechart-content">
+          <div class="piechart-canvas-container">
+            <canvas
+              id="pieChart"
+              width="340"
+              height="340"
+              style="max-width: 100%; height: auto"
+            ></canvas>
+          </div>
+          <div class="piechart-text">
+            <h2 class="section-title">Sample Class Distribution</h2>
+            <p class="section-paragraph">
+              Visualization of the proportion of MDD patients vs. healthy
+              controls in our dataset. This balance is crucial for unbiased
+              model performance.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br />
+
+      <!-- Timeline section -->
+      <div class="timeline-section">
+        <div class="timeline-content">
+          <div class="timeline-text">
+            <h2 class="section-title">Project Timeline</h2>
+            <p class="section-paragraph">
+              Key milestones in the SVM Gut Bacteria study, from data collection
+              to model validation. Explore the journey of our research process.
+            </p>
+          </div>
+          <div class="timeline-canvas-container">
+            <canvas
+              id="timelineChart"
+              width="400"
+              height="180"
+              style="max-width: 100%; height: auto; background: none"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br />
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Pie chart for class distribution
+      const ctxPie = document.getElementById("pieChart").getContext("2d");
+      const pieChart = new Chart(ctxPie, {
+        type: "pie",
+        data: {
+          labels: ["MDD Patients", "Healthy Controls"],
+          datasets: [
+            {
+              data: [248, 312],
+              backgroundColor: [
+                "rgba(30, 144, 255, 0.94)", // blue
+                "rgba(40, 167, 69, 0.92)", // green
+              ],
+              borderWidth: 2,
+              borderColor: "rgba(255,255,255,0.85)",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true,
+              position: "bottom",
+              labels: {
+                font: { family: "Nunito, Lato, sans-serif", size: 16 },
+              },
+            },
+          },
+        },
+      });
+    </script>
+    <style>
+      /* Pie chart section styles */
+      .piechart-section {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 144, 255, 0.18),
+          rgba(40, 167, 69, 0.15)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        box-shadow:
+          0 8px 20px rgba(0, 0, 0, 0.12),
+          0 2px 6px rgba(0, 0, 0, 0.08);
+        margin: 0 auto 3.5rem auto;
+        padding: clamp(3rem, 5vw, 4.5rem) clamp(2rem, 5vw, 4rem);
+        max-width: 1400px;
+      }
+      .piechart-content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: clamp(2.5rem, 5vw, 4.5rem);
+        justify-content: center;
+      }
+      .piechart-canvas-container {
+        flex: 0 0 420px;
+        max-width: 420px;
+        background: linear-gradient(
+          135deg,
+          rgba(30, 144, 255, 0.25),
+          rgba(40, 167, 69, 0.22)
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 4px 20px rgba(30, 144, 255, 0.15),
+          inset 0 0 20px rgba(255, 255, 255, 0.3);
+        padding: 2rem;
+        border: 3px solid rgba(30, 144, 255, 0.2);
+      }
+      .piechart-text {
+        min-width: 280px;
+        max-width: 450px;
+        flex: 1;
+      }
+      .piechart-section .section-title {
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 900;
+        color: #000;
+        margin-bottom: 1.5rem;
+        text-align: right;
+      }
+      .piechart-section .section-paragraph {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        color: #222;
+        text-align: right;
+        line-height: 1.7;
+      }
+
+      /* Timeline section styles */
+      .timeline-section {
+        background: linear-gradient(
+          135deg,
+          rgba(128, 0, 192, 0.17),
+          rgba(255, 64, 128, 0.12)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        box-shadow:
+          0 8px 20px rgba(0, 0, 0, 0.12),
+          0 2px 6px rgba(0, 0, 0, 0.08);
+        margin: 0 auto 3.5rem auto;
+        padding: clamp(3rem, 5vw, 4.5rem) clamp(2rem, 5vw, 4rem);
+        max-width: 1400px;
+      }
+      .timeline-content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: clamp(2.5rem, 5vw, 4.5rem);
+        justify-content: center;
+      }
+      .timeline-canvas-container {
+        flex: 0 0 480px;
+        max-width: 480px;
+        background: linear-gradient(
+          135deg,
+          rgba(128, 0, 192, 0.18),
+          rgba(255, 64, 128, 0.15)
+        );
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 4px 20px rgba(128, 0, 192, 0.12),
+          inset 0 0 15px rgba(255, 255, 255, 0.2);
+        padding: 2rem;
+        border: 3px solid rgba(128, 0, 192, 0.15);
+        height: 280px;
+      }
+      .timeline-text {
+        min-width: 280px;
+        max-width: 450px;
+        flex: 1;
+      }
+      .timeline-section .section-title {
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 900;
+        color: #000;
+        margin-bottom: 1.5rem;
+        text-align: left;
+      }
+      .timeline-section .section-paragraph {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        color: #222;
+        text-align: left;
+        line-height: 1.7;
+      }
+
+      /* Responsive adjustments for new sections */
+      @media (max-width: 900px) {
+        .piechart-content,
+        .timeline-content {
+          flex-direction: column;
+          gap: 2.5rem;
+        }
+        .piechart-canvas-container {
+          flex: 0 0 380px;
+          max-width: 380px;
+        }
+        .timeline-canvas-container {
+          flex: 0 0 420px;
+          max-width: 420px;
+        }
+        .piechart-section .section-title,
+        .timeline-section .section-title {
+          text-align: center;
+        }
+        .piechart-section .section-paragraph,
+        .timeline-section .section-paragraph {
+          text-align: center;
+        }
+      }
+      @media (max-width: 600px) {
+        .piechart-section,
+        .timeline-section {
+          padding: 1.5rem 0.5rem;
+          border-radius: 20px;
+        }
+        .piechart-canvas-container {
+          flex: 0 0 320px;
+          max-width: 320px;
+          padding: 1rem;
+        }
+        .timeline-canvas-container {
+          flex: 0 0 100%;
+          max-width: 95%;
+          height: auto;
+          min-height: 200px;
+          padding: 1rem;
+        }
+        .piechart-text,
+        .timeline-text {
+          max-width: 100%;
+          min-width: 0;
+        }
+        .piechart-section .section-title,
+        .timeline-section .section-title {
+          font-size: clamp(1.5rem, 3vw, 2rem);
+          margin-bottom: 1rem;
+        }
+        .piechart-section .section-paragraph,
+        .timeline-section .section-paragraph {
+          font-size: clamp(0.9rem, 2vw, 1.1rem);
+        }
+      }
+    </style>
+    <script>
+      // Timeline chart placeholder (horizontal bar timeline)
+      const ctxTimeline = document
+        .getElementById("timelineChart")
+        .getContext("2d");
+      const timelineChart = new Chart(ctxTimeline, {
+        type: "bar",
+        data: {
+          labels: [
+            "Data Collection",
+            "Preprocessing",
+            "Model Training",
+            "Validation",
+            "Analysis",
+            "Manuscript",
+          ],
+          datasets: [
+            {
+              label: "Milestone",
+              data: [1, 2, 3, 4, 5, 6],
+              backgroundColor: [
+                "rgba(128,0,192,0.55)",
+                "rgba(153,51,255,0.48)",
+                "rgba(192,64,255,0.44)",
+                "rgba(255,64,128,0.45)",
+                "rgba(255,128,192,0.41)",
+                "rgba(255,200,232,0.38)",
+              ],
+              borderRadius: 16,
+              borderSkipped: false,
+              barPercentage: 0.7,
+              categoryPercentage: 0.65,
+            },
+          ],
+        },
+        options: {
+          indexAxis: "y",
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false },
+          },
+          scales: {
+            x: {
+              display: false,
+              min: 0,
+              max: 7,
+            },
+            y: {
+              ticks: {
+                font: { family: "Nunito, Lato, sans-serif", size: 14 },
+              },
+              grid: { display: false },
+            },
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    </script>
+  </body>
+</html>

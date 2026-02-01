@@ -1,0 +1,1328 @@
+<!-- filepath: /Users/ankitabakshi/Downloads/scifair/SVM_Website/svm_limits.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Limitations page for SVM MDD Gut Bacteria project. Details constraints and considerations of the model."
+    />
+    <meta name="author" content="Ivan Raizada, Matthew Sun" />
+
+    <style>
+      /* ===================== BODY & GLOBAL BACKGROUND ===================== */
+      body {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 245, 245, 0.75) 0%,
+          rgba(255, 252, 240, 0.75) 16.67%,
+          rgba(245, 255, 245, 0.75) 33.33%,
+          rgba(240, 250, 255, 0.75) 50%,
+          rgba(250, 245, 255, 0.75) 66.67%,
+          rgba(255, 245, 250, 0.75) 100%
+        ) !important;
+        background-attachment: fixed !important;
+      }
+
+      /* ===================== LIMITATIONS-SPECIFIC STYLES ===================== */
+
+      .limitations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: clamp(2rem, 4vw, 3rem);
+        padding: clamp(3rem, 5vw, 4rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        max-width: 1600px;
+      }
+
+      .limitation-card {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 76, 76, 0.1),
+          rgba(255, 235, 59, 0.1)
+        );
+        border: 2px solid rgb(var(--light-gray));
+        border-radius: 24px;
+        padding: clamp(2.2rem, 4vw, 3rem);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        opacity: 0;
+        animation: slideUpCard 0.7s ease-out forwards;
+      }
+
+      .limitation-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .limitation-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .limitation-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .limitation-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .limitation-card:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+      .limitation-card:nth-child(6) {
+        animation-delay: 0.6s;
+      }
+      .limitation-card:nth-child(7) {
+        animation-delay: 0.7s;
+      }
+      .limitation-card:nth-child(8) {
+        animation-delay: 0.8s;
+      }
+
+      @keyframes slideUpCard {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .limitation-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 12px 35px rgba(255, 76, 76, 0.2);
+        border-color: var(--red);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 76, 76, 0.15),
+          rgba(255, 235, 59, 0.15)
+        );
+      }
+
+      .limitation-card h3 {
+        color: var(--red);
+        font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .limitation-card p {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .limitation-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--red), #ff6666);
+        color: white;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .limitation-card:hover .limitation-icon {
+        transform: scale(1.2) rotate(8deg);
+      }
+
+      /* Summary callout box - Red to Yellow Gradient */
+      .limitation-summary {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 76, 76, 0.12),
+          rgba(255, 235, 59, 0.12)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        border-left: 8px solid var(--red);
+        padding: clamp(2rem, 4vw, 3.5rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        max-width: 1400px;
+        box-shadow: 0 6px 25px rgba(255, 76, 76, 0.1);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: fadeInUp 0.8s ease-out 0.9s both;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .limitation-summary:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(255, 76, 76, 0.18);
+        border-color: var(--red);
+      }
+
+      .limitation-summary h3 {
+        color: var(--red);
+        font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        margin-top: 0;
+      }
+
+      .limitation-summary p {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.95rem, 2vw, 1.1rem);
+        line-height: 1.7;
+        margin: 0;
+      }
+
+      /* Key considerations section - Purple to Pink gradient */
+      .key-considerations {
+        background: linear-gradient(
+          135deg,
+          rgba(128, 0, 192, 0.08),
+          rgba(255, 64, 128, 0.08)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        max-width: 1400px;
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        padding: clamp(3rem, 5vw, 4rem) clamp(2rem, 5vw, 4rem);
+        box-shadow: 0 6px 25px rgba(128, 0, 192, 0.08);
+        animation: slideInRight 0.8s ease-out;
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .key-considerations h2 {
+        color: #8000c0;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .key-considerations-intro {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.95rem, 2vw, 1.1rem);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        margin-top: 0;
+      }
+
+      .considerations-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: clamp(1.5rem, 3vw, 2.5rem);
+        margin-top: 1.5rem;
+      }
+
+      .consideration-item {
+        background: linear-gradient(
+          135deg,
+          rgba(200, 128, 224, 0.08),
+          rgba(255, 128, 176, 0.08)
+        );
+        border: 2px solid rgb(var(--light-gray));
+        border-radius: 20px;
+        padding: clamp(1.5rem, 3vw, 2rem);
+        display: flex;
+        gap: 1.2rem;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        opacity: 0;
+        animation: scaleIn 0.6s ease-out forwards;
+      }
+
+      .consideration-item:nth-child(1) {
+        animation-delay: 1s;
+      }
+      .consideration-item:nth-child(2) {
+        animation-delay: 1.1s;
+      }
+      .consideration-item:nth-child(3) {
+        animation-delay: 1.2s;
+      }
+      .consideration-item:nth-child(4) {
+        animation-delay: 1.3s;
+      }
+      .consideration-item:nth-child(5) {
+        animation-delay: 1.4s;
+      }
+
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      .consideration-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 28px rgba(128, 0, 192, 0.15);
+        border-color: #8000c0;
+        background: linear-gradient(
+          135deg,
+          rgba(200, 128, 224, 0.12),
+          rgba(255, 128, 176, 0.12)
+        );
+      }
+
+      .consideration-bullet {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg, #8000c0, #ff4080);
+        color: white;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .consideration-item:hover .consideration-bullet {
+        transform: scale(1.15) rotate(-8deg);
+      }
+
+      .consideration-text h4 {
+        color: #8000c0;
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .consideration-text p {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.85rem, 1.8vw, 1rem);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      /* Statistical callout - Blue to Green gradient */
+      .statistical-note {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 144, 255, 0.12),
+          rgba(40, 167, 69, 0.12)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        padding: clamp(2rem, 4vw, 3.5rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        max-width: 1400px;
+        box-shadow: 0 6px 25px rgba(30, 144, 255, 0.1);
+        animation: slideInLeft 0.8s ease-out;
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .statistical-note h3 {
+        color: var(--blue);
+        font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .statistical-note p {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.95rem, 2vw, 1.1rem);
+        line-height: 1.7;
+        margin: 0;
+      }
+
+      .stat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--blue), #28a745);
+        color: white;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+
+      /* ===================== MITIGATION STRATEGIES TIMELINE ===================== */
+      .mitigation-section {
+        background: linear-gradient(
+          135deg,
+          rgba(128, 0, 192, 0.06),
+          rgba(255, 235, 59, 0.06)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        padding: clamp(3rem, 5vw, 4rem) clamp(2rem, 5vw, 4rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        max-width: 1400px;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+        animation: fadeInUp 0.8s ease-out 1.5s both;
+      }
+
+      .mitigation-title {
+        color: #8000c0;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 800;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .mitigation-subtitle {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.9rem, 2vw, 1.05rem);
+        text-align: center;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+      }
+
+      .mitigation-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(2rem, 3vw, 2.5rem);
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .mitigation-timeline::before {
+        content: "";
+        position: absolute;
+        left: 24px;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #8000c0, #ff4080, #ffeb3b);
+        border-radius: 2px;
+      }
+
+      .mitigation-strategy {
+        display: flex;
+        gap: clamp(1.5rem, 3vw, 2rem);
+        padding-left: clamp(4rem, 6vw, 5rem);
+        position: relative;
+        opacity: 0;
+        animation: slideInLeft 0.6s ease-out forwards;
+      }
+
+      .mitigation-strategy:nth-child(1) {
+        animation-delay: 1.6s;
+      }
+      .mitigation-strategy:nth-child(2) {
+        animation-delay: 1.75s;
+      }
+      .mitigation-strategy:nth-child(3) {
+        animation-delay: 1.9s;
+      }
+      .mitigation-strategy:nth-child(4) {
+        animation-delay: 2.05s;
+      }
+      .mitigation-strategy:nth-child(5) {
+        animation-delay: 2.2s;
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .mitigation-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #8000c0, #ff4080);
+        color: white;
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        position: absolute;
+        left: -1px;
+        top: 0;
+        transition: transform 0.3s ease;
+      }
+
+      .mitigation-strategy:hover .mitigation-number {
+        transform: scale(1.15);
+      }
+
+      .mitigation-bar {
+        position: absolute;
+        left: 25px;
+        top: 50px;
+        width: 2px;
+        height: clamp(80px, 10vh, 150px);
+        background: linear-gradient(
+          180deg,
+          rgba(128, 0, 192, 0.3),
+          transparent
+        );
+        border-radius: 1px;
+      }
+
+      .mitigation-content {
+        background: white;
+        border: 2px solid rgb(var(--light-gray));
+        border-radius: 20px;
+        padding: clamp(1.5rem, 3vw, 2rem);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        flex: 1;
+      }
+
+      .mitigation-strategy:hover .mitigation-content {
+        transform: translateX(8px);
+        box-shadow: 0 8px 28px rgba(128, 0, 192, 0.15);
+        border-color: #8000c0;
+      }
+
+      .mitigation-content h4 {
+        color: #8000c0;
+        font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+        font-weight: 800;
+        margin: 0 0 0.8rem 0;
+      }
+
+      .mitigation-content p {
+        color: var(--black);
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.9rem, 1.9vw, 1rem);
+        line-height: 1.65;
+        margin: 0.5rem 0;
+      }
+
+      .mitigation-content p:last-child {
+        margin-bottom: 0;
+      }
+
+      .mitigation-content strong {
+        color: #ff4080;
+        font-weight: 700;
+      }
+
+      /* ===================== WHAT WE CAN/CANNOT CONCLUDE ===================== */
+      .conclusions-section {
+        background: linear-gradient(
+          135deg,
+          rgba(200, 128, 224, 0.08),
+          rgba(255, 128, 176, 0.08)
+        );
+        border: 3px solid rgb(var(--light-gray));
+        border-radius: 50px;
+        padding: clamp(3rem, 5vw, 4rem) clamp(2rem, 5vw, 4rem);
+        margin: clamp(2.5rem, 5vw, 4rem) auto;
+        max-width: 1400px;
+        box-shadow: 0 6px 25px rgba(128, 0, 192, 0.08);
+        animation: fadeInUp 0.8s ease-out 2.2s both;
+      }
+
+      .conclusions-title {
+        color: #8000c0;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 800;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 2.5rem;
+      }
+
+      .conclusions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(2rem, 4vw, 3rem);
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .conclusion-column {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1rem, 2vw, 1.5rem);
+      }
+
+      .conclusion-header {
+        font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+        font-weight: 800;
+        padding: 1.2rem;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+      }
+
+      .can-conclude {
+        background: linear-gradient(135deg, #28a745, #90ee90);
+      }
+
+      .cannot-conclude {
+        background: linear-gradient(135deg, #ff4c4c, #ff6666);
+      }
+
+      .conclusion-item {
+        display: flex;
+        gap: 1rem;
+        padding: clamp(1rem, 2vw, 1.5rem);
+        background: white;
+        border-radius: 18px;
+        border: 2px solid rgb(var(--light-gray));
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        opacity: 0;
+        animation: slideInUp 0.6s ease-out forwards;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        align-items: flex-start;
+      }
+
+      .conclusion-column .conclusion-item:nth-child(2) {
+        animation-delay: 2.3s;
+      }
+      .conclusion-column .conclusion-item:nth-child(3) {
+        animation-delay: 2.45s;
+      }
+      .conclusion-column .conclusion-item:nth-child(4) {
+        animation-delay: 2.6s;
+      }
+      .conclusion-column .conclusion-item:nth-child(5) {
+        animation-delay: 2.75s;
+      }
+      .conclusion-column .conclusion-item:nth-child(6) {
+        animation-delay: 2.9s;
+      }
+
+      .conclusion-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+      }
+
+      .conclusion-check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        color: white;
+      }
+
+      .check-icon {
+        background: linear-gradient(135deg, #28a745, #90ee90);
+      }
+
+      .x-icon {
+        background: linear-gradient(135deg, #ff4c4c, #ff6666);
+      }
+
+      .conclusion-text {
+        font-family: Nunito, sans-serif;
+        font-size: clamp(0.85rem, 1.8vw, 1rem);
+        line-height: 1.5;
+        color: var(--black);
+        margin: 0;
+      }
+
+      @media (max-width: 1000px) {
+        .causality-path {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .causality-node {
+          width: 60px;
+          height: 60px;
+          font-size: 1.5rem;
+        }
+
+        .conclusions-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 1200px) {
+        .limitations-grid {
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          max-width: 98vw;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .limitations-grid {
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .considerations-list {
+          grid-template-columns: 1fr;
+        }
+
+        .consideration-item {
+          flex-direction: row;
+        }
+
+        .consideration-bullet {
+          width: 38px;
+          height: 38px;
+          font-size: 1.1rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .limitations-grid {
+          grid-template-columns: 1fr;
+          gap: clamp(1.5rem, 3vw, 2rem);
+          padding: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .limitation-card {
+          padding: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .considerations-list {
+          grid-template-columns: 1fr;
+        }
+
+        .consideration-item {
+          gap: 1rem;
+          padding: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .consideration-bullet {
+          width: 35px;
+          height: 35px;
+          font-size: 1rem;
+        }
+
+        .key-considerations,
+        .statistical-note,
+        .limitation-summary {
+          padding: clamp(1.5rem, 3vw, 2.5rem);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .limitations-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .limitation-card h3,
+        .limitation-summary h3,
+        .statistical-note h3,
+        .key-considerations h2 {
+          font-size: clamp(1.1rem, 4vw, 1.5rem);
+        }
+
+        .consideration-bullet {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    </style>
+    <title>Limitations - SVM Gut Bacteria</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="images/website_icon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="content-language" content="en" />
+  </head>
+  <body>
+    <header>
+      <a id="top-left-decorative-bar" href="index.html">
+        <img
+          src="images/website_icon_nobg.png"
+          alt="Website Icon"
+          id="website-icon"
+          width="100"
+          height="100"
+          class="header-icon"
+        />
+      </a>
+      <h1 id="project-name" class="project-title">
+        <span style="color: #6c728a">SVM</span> for
+        <span style="color: #1e90ff">MDD</span> and
+        <span style="color: #ff4c4c">Gut</span>
+      </h1>
+
+      <nav id="top-nav-bar">
+        <div class="bubble_bg">
+          <a href="index.html" class="nav-link">Home</a
+          ><a href="svm_try.html" class="nav-link">Try it Now</a>
+        </div>
+        <div class="bubble_ry">
+          <a href="svm_methods.html" class="nav-link">Methodology</a>
+          <a href="svm_results.html" class="nav-link">Results</a>
+          <a href="svm_limits.html" class="nav-link">Limitations</a>
+        </div>
+      </nav>
+    </header>
+
+    <br /><br /><br /><br /><br /><br />
+
+    <main>
+      <!-- Hero section -->
+      <div class="hero-section">
+        <h2 class="hero-title">Understanding Model Limitations</h2>
+        <p class="hero-paragraph">
+          <span style="font-weight: 700">Lato.</span> While our SVM model
+          demonstrates significant statistical power in distinguishing MDD and
+          control microbiomes (PERMANOVA p=0.001, Shannon diversity
+          p=3.62×10⁻⁸), it is essential to understand the experimental
+          constraints and biological complexities that affect its application
+          and real-world interpretability. This page outlines key limitations
+          and considerations for proper model contextualization.
+        </p>
+      </div>
+
+      <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+      <!-- Limitations Grid -->
+      <div class="limitations-grid">
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">1</span> Limited Sample Population
+            Diversity
+          </h3>
+          <p>
+            Our model was trained on 205 samples (106 controls, 99 MDD patients)
+            from a single public sequencing project. While statistically
+            significant, this cohort represents a narrow slice of global human
+            diversity. Geographic region, ethnicity, socioeconomic status, and
+            dietary patterns of the source population are not fully documented,
+            limiting generalizability to populations with different microbiome
+            baseline compositions. Robust external validation in diverse cohorts
+            is essential before clinical translation.
+          </p>
+        </div>
+
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">2</span> Cross-Sectional Data Only
+          </h3>
+          <p>
+            Our dataset captures microbiome composition at a single timepoint
+            per individual. We cannot determine temporal dynamics, longitudinal
+            stability of biomarkers, or how microbiome changes correlate with
+            MDD progression or remission. Without longitudinal follow-up, we
+            cannot assess whether identified taxa precede, follow, or are merely
+            concurrent with mood disorder symptoms—a critical requirement for
+            mechanistic understanding and therapeutic targeting.
+          </p>
+        </div>
+
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">3</span> Unmeasured Confounding
+            Variables
+          </h3>
+          <p>
+            The gut microbiome is shaped by diet, medication (especially
+            antibiotics, which alter composition by 20–35% in our chimera
+            rates), stress, sleep, exercise, infection history, and host
+            genetics. Our model includes only abundance data without controlling
+            for these factors. A patient's apparent "MDD-like" microbiome
+            profile could reflect antibiotic use, dietary changes, or comorbid
+            illness rather than depression itself, introducing classification
+            bias and reducing mechanistic validity.
+          </p>
+        </div>
+
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">4</span> Correlation ≠ Causation
+          </h3>
+          <p>
+            Our differential abundance findings (e.g., Bacteroides ↓ in MDD,
+            Alistipes ↑ in MDD) identify statistical associations, not causal
+            relationships. The gut-brain axis is bidirectional: MDD may alter
+            the microbiome, the microbiome may influence mood via SCFA
+            production or LPS translocation, or both may be driven by a third
+            factor (immune dysregulation, genetic predisposition). Inferring
+            therapeutic interventions from predictive associations without
+            functional studies and longitudinal validation is scientifically
+            unfounded.
+          </p>
+        </div>
+
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">5</span> Black-Box Model
+            Interpretation
+          </h3>
+          <p>
+            While SVM achieves good classification performance, the algorithm
+            does not provide intuitive biological explanations. We cannot
+            visualize precisely which bacterial interactions drive a prediction
+            or how the model weights each genus nonlinearly. Feature importance
+            rankings suggest biological relevance but do not establish
+            mechanistic plausibility. Explainability requires complementary
+            approaches (metabolomics, functional assays, SHAP analysis) not
+            included here.
+          </p>
+        </div>
+
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">6</span> 16S rRNA Sequencing Bias
+          </h3>
+          <p>
+            16S rRNA profiling has inherent limitations: PCR bias favors certain
+            taxa, resolution is limited to genus level (many pathogenic species
+            share genus), and low-abundance organisms are often missed. Our
+            analysis at the genus level masks species-level heterogeneity (e.g.,
+            some Bacteroides species may differ between groups while others do
+            not). Shotgun metagenomics or metaproteomics would provide more
+            comprehensive data but were beyond project scope.
+          </p>
+        </div>
+
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">7</span> Model Performance Ceiling
+          </h3>
+          <p>
+            Even with statistical significance, our SVM achieves moderate
+            classification accuracy (limited by microbiome compositional noise
+            and individual heterogeneity). No microbiome-alone model will reach
+            diagnostic-grade sensitivity/specificity for clinical depression,
+            which involves neurochemistry, genetics, and psychosocial factors
+            beyond the microbiome's influence. Microbiome markers are best
+            viewed as one dimension of a multimodal biomarker panel, not
+            standalone diagnostic tests.
+          </p>
+        </div>
+
+        <div class="limitation-card">
+          <h3>
+            <span class="limitation-icon">8</span> Lack of Clinical Metadata
+          </h3>
+          <p>
+            Public datasets often lack detailed clinical phenotyping. We have no
+            data on MDD severity, treatment status, duration of illness,
+            comorbidities (anxiety, PTSD, substance use), or psychiatric
+            medication history—all of which affect microbiome composition. This
+            limits our ability to identify microbiome signatures specific to MDD
+            vs. confounded by treatment-related changes or concurrent
+            conditions, reducing clinical relevance.
+          </p>
+        </div>
+      </div>
+
+      <br /><br /><br /><br /><br />
+
+      <!-- Statistical Context -->
+      <div class="statistical-note">
+        <h3><span class="stat-icon">📊</span> Our Data in Context</h3>
+        <p>
+          Despite these limitations, our findings are statistically robust:
+          alpha diversity showed highly significant group separation
+          (Kruskal–Wallis H=30.34, p=3.62×10⁻⁸), beta diversity PERMANOVA
+          achieved p=0.001 with pseudo-F=17.36 (n=999 permutations), and 34+
+          genera exhibited FDR-corrected significance in differential abundance
+          testing (adjusted p < 0.05). Key differentially abundant genera
+          include Bacteroides (adjusted p=9.07×10⁻¹⁴), Blautia (adjusted
+          p=1.14×10⁻⁵), Alistipes (adjusted p=1.45×10⁻⁵), and Parabacteroides
+          (adjusted p=1.30×10⁻⁷). These results confirm that MDD-associated
+          microbiome changes exist in our cohort and demonstrate strong
+          statistical validation. However, statistical significance does not
+          equate to biological causation, diagnostic utility, or population
+          generalizability—a critical distinction for scientific interpretation.
+        </p>
+      </div>
+
+      <br /><br /><br /><br /><br />
+
+      <!-- Key Considerations -->
+      <div class="key-considerations">
+        <h2>Key Considerations for Model Interpretation</h2>
+        <p class="key-considerations-intro">
+          When applying or interpreting this SVM model, practitioners and
+          researchers should keep the following points in mind to avoid
+          overinterpretation and maintain scientific rigor:
+        </p>
+
+        <div class="considerations-list">
+          <div class="consideration-item">
+            <div class="consideration-bullet">A</div>
+            <div class="consideration-text">
+              <h4>Research Tool, Not Clinical Test</h4>
+              <p>
+                This model is designed to advance scientific understanding of
+                the gut-brain axis, not to diagnose, rule out, or guide
+                treatment of MDD in individual patients. Clinical depression
+                diagnosis requires comprehensive psychiatric evaluation by
+                qualified professionals using validated diagnostic criteria.
+              </p>
+            </div>
+          </div>
+
+          <div class="consideration-item">
+            <div class="consideration-bullet">B</div>
+            <div class="consideration-text">
+              <h4>Validate in Independent Cohorts</h4>
+              <p>
+                Before any clinical application, the model must be externally
+                validated in diverse, well-characterized populations with
+                longitudinal follow-up. Performance on held-out test data from a
+                single cohort does not guarantee generalization to different
+                demographics, healthcare systems, or disease presentations.
+              </p>
+            </div>
+          </div>
+
+          <div class="consideration-item">
+            <div class="consideration-bullet">C</div>
+            <div class="consideration-text">
+              <h4>Account for Confounding</h4>
+              <p>
+                In any replication or clinical application, carefully document
+                and statistically control for antibiotic use, diet, medication
+                history, comorbidities, and other microbiome modulators.
+                Unadjusted analyses risk attributing confounding factors'
+                effects to MDD-specific dysbiosis.
+              </p>
+            </div>
+          </div>
+
+          <div class="consideration-item">
+            <div class="consideration-bullet">D</div>
+            <div class="consideration-text">
+              <h4>Interpret with Mechanistic Caution</h4>
+              <p>
+                Avoid inferring specific therapeutic targets (e.g., "probiotics
+                can cure depression") from this correlative model. Functional
+                validation is required to establish whether altered taxa are
+                causally linked to mood phenotypes or merely associated with
+                environmental/genetic factors affecting both.
+              </p>
+            </div>
+          </div>
+
+          <div class="consideration-item">
+            <div class="consideration-bullet">E</div>
+            <div class="consideration-text">
+              <h4>Multimodal Approach Recommended</h4>
+              <p>
+                The microbiome is one of many biological systems implicated in
+                mood disorders. Optimal diagnostic and therapeutic strategies
+                will integrate microbiome data with neuroimaging, genetics,
+                neuroimmune markers, and psychological assessment for
+                comprehensive patient care.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br /><br />
+
+      <!-- Mitigation Strategies Section -->
+      <div class="mitigation-section">
+        <h2 class="mitigation-title">
+          How We Mitigated Limitations & Strengthened Rigor
+        </h2>
+        <p class="mitigation-subtitle">
+          While perfect science is impossible, we implemented strategic
+          decisions to maximize validity within our project scope:
+        </p>
+
+        <div class="mitigation-timeline">
+          <!-- Mitigation 1 -->
+          <div class="mitigation-strategy">
+            <div class="mitigation-number">1</div>
+            <div class="mitigation-bar"></div>
+            <div class="mitigation-content">
+              <h4>Statistical Rigor Over Borderline Significance</h4>
+              <p>
+                <strong>The limit:</strong> Sample sizes of 205 (106 controls,
+                99 MDD) can yield false positives if statistical thresholds are
+                lenient.
+              </p>
+              <p>
+                <strong>Our mitigation:</strong> We used stringent statistical
+                thresholds far below conventional significance (PERMANOVA
+                p=0.001, Kruskal–Wallis p=3.62×10⁻⁸), not marginal p=0.05
+                cutoffs. We applied Benjamini–Hochberg FDR correction across 34+
+                taxa in differential abundance testing. This conservative
+                approach dramatically reduces spurious findings. Our p-values
+                are publication-grade and unlikely to represent false
+                discoveries.
+              </p>
+            </div>
+          </div>
+
+          <!-- Mitigation 2 -->
+          <div class="mitigation-strategy">
+            <div class="mitigation-number">2</div>
+            <div class="mitigation-bar"></div>
+            <div class="mitigation-content">
+              <h4>Algorithmic Validation to Assess Overfitting</h4>
+              <p>
+                <strong>The limit:</strong> Our SVM could achieve high accuracy
+                on training data but fail on new populations (overfitting).
+              </p>
+              <p>
+                <strong>Our mitigation:</strong> We employed k-fold
+                cross-validation and tested multiple algorithm variants (SVM,
+                Random Forest, Logistic Regression). Consistent performance
+                across methods suggests the pattern is real, not an artifact of
+                SVM hyperparameter choice. We also examined feature importance
+                stability to ensure biological relevance.
+              </p>
+            </div>
+          </div>
+
+          <!-- Mitigation 3 -->
+          <div class="mitigation-strategy">
+            <div class="mitigation-number">3</div>
+            <div class="mitigation-bar"></div>
+            <div class="mitigation-content">
+              <h4>Mechanistic Plausibility Checks</h4>
+              <p>
+                <strong>The limit:</strong> Black-box models lack biological
+                interpretability; associations may be spurious.
+              </p>
+              <p>
+                <strong>Our mitigation:</strong> We cross-referenced identified
+                taxa with published literature on mood disorders and microbiome.
+                Our most significant findings—reduced Bacteroides
+                (p=9.07×10⁻¹⁴), altered Lachnospiraceae members, and
+                dysregulation of taxa like Blautia and Alistipes—align with
+                independent depression–microbiome studies. This \"external
+                coherence\" with peer-reviewed findings reduces likelihood that
+                our results reflect statistical noise and suggests biological
+                relevance.
+              </p>
+            </div>
+          </div>
+
+          <!-- Mitigation 4 -->
+          <div class="mitigation-strategy">
+            <div class="mitigation-number">4</div>
+            <div class="mitigation-bar"></div>
+            <div class="mitigation-content">
+              <h4>Confounding Control Through Data Preprocessing</h4>
+              <p>
+                <strong>The limit:</strong> Unmeasured confounders (diet,
+                antibiotics, stress) bias results.
+              </p>
+              <p>
+                <strong>Our mitigation:</strong> We standardized 16S sequencing
+                parameters (same platform, same library prep protocol). We
+                applied rarefaction to control for sequencing depth variation.
+                We used taxa relative abundance (not raw counts) to eliminate
+                sequencing-depth artifacts. These preprocessing steps don't
+                eliminate all confounding but reduce technical sources of bias.
+              </p>
+            </div>
+          </div>
+
+          <!-- Mitigation 5 -->
+          <div class="mitigation-strategy">
+            <div class="mitigation-number">5</div>
+            <div class="mitigation-bar"></div>
+            <div class="mitigation-content">
+              <h4>Transparent Reporting of Limitations</h4>
+              <p>
+                <strong>The limit:</strong> Many publications oversell findings
+                or hide weaknesses.
+              </p>
+              <p>
+                <strong>Our mitigation:</strong> This entire page exists to
+                explicitly acknowledge constraints. We avoided causal language
+                (e.g., never "bacteria cause depression"). We framed results as
+                "associations in our cohort" and stated external validity
+                requires replication. Transparency is not a limitation
+                mitigation; it's a responsibility.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br /><br />
+
+      <!-- What We Can and Cannot Conclude -->
+      <div class="conclusions-section">
+        <h2 class="conclusions-title">
+          Scientific Honesty: What We CAN vs CANNOT Conclude
+        </h2>
+
+        <div class="conclusions-grid">
+          <!-- Can Conclude Column -->
+          <div class="conclusion-column">
+            <div class="conclusion-header can-conclude">
+              ✅ WHAT WE CAN CONCLUDE
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check check-icon">✓</div>
+              <p class="conclusion-text">
+                MDD and control microbiomes differ significantly (p=0.001)
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check check-icon">✓</div>
+              <p class="conclusion-text">
+                Specific taxa show consistent abundance shifts between groups
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check check-icon">✓</div>
+              <p class="conclusion-text">
+                Results are statistically robust and reproducible in our cohort
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check check-icon">✓</div>
+              <p class="conclusion-text">
+                Findings are mechanistically plausible given known gut-brain
+                physiology
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check check-icon">✓</div>
+              <p class="conclusion-text">
+                These microbiome changes warrant further investigation
+              </p>
+            </div>
+          </div>
+
+          <!-- Cannot Conclude Column -->
+          <div class="conclusion-column">
+            <div class="conclusion-header cannot-conclude">
+              ❌ WHAT WE CANNOT CONCLUDE
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check x-icon">✗</div>
+              <p class="conclusion-text">
+                These bacteria CAUSE depression (correlation ≠ causation)
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check x-icon">✗</div>
+              <p class="conclusion-text">
+                These findings apply to all populations globally
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check x-icon">✗</div>
+              <p class="conclusion-text">
+                This model is diagnostic-grade for clinical use
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check x-icon">✗</div>
+              <p class="conclusion-text">
+                Reversing these microbiome changes will treat MDD
+              </p>
+            </div>
+
+            <div class="conclusion-item">
+              <div class="conclusion-check x-icon">✗</div>
+              <p class="conclusion-text">
+                The microbiome is the primary driver of mood disorders
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br /><br /><br />
+
+      <!-- Summary callout -->
+      <div class="limitation-summary">
+        <h3>Summary: Bridging Science and Application</h3>
+        <p>
+          This project demonstrates that gut microbiome composition
+          significantly differs between MDD and control individuals at the
+          statistical and compositional levels—a finding consistent with
+          published literature and mechanistically plausible given the gut-brain
+          axis. However, microbiome associations do not directly translate to
+          clinical diagnostic tools or therapeutic interventions. Future work
+          must integrate longitudinal design, detailed clinical phenotyping,
+          functional validation of key taxa, and external replication to move
+          from mechanistic discovery toward patient-relevant biomarkers. Our
+          model contributes valuable preliminary evidence to a growing body of
+          work on the microbiome-mood connection and provides a foundation for
+          future research in this promising but still-evolving field.
+        </p>
+      </div>
+
+      <br /><br /><br /><br /><br />
+    </main>
+  </body>
+</html>
